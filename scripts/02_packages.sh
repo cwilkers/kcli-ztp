@@ -20,6 +20,8 @@ curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s http
 chmod u+x /usr/bin/kubectl
 
 kcli download openshift-install -P version={{ version }} -P tag={{ tag }} -P pull_secret=/root/openshift_pull.json -P baremetal=true
+#RELEASE_IMAGE=$(curl -s https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/{{ version }}/{{ tag }}/release.txt | grep 'Pull From: quay.io' | awk -F ' ' '{print $3}')
+#/usr/bin/oc adm release extract --registry-config /root/openshift_pull.json --command=openshift-baremetal-install --to /root/bin $RELEASE_IMAGE
 mv openshift-baremetal-install /usr/bin/openshift-install
 chmod u+x /usr/bin/openshift-install
 openshift-install version | grep 'release image' | cut -d' ' -f3 > /root/version.txt

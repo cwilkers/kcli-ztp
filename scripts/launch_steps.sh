@@ -34,7 +34,7 @@ echo -e "${blue}************ RUNNING 04_disconnected_{{ 'quay.sh' if disconnecte
 {% endif %}
 echo -e "${blue}************ RUNNING 04_disconnected_mirror.sh ************${clear}"
 /root/scripts/04_disconnected_mirror.sh || exit 1
-{% if (disconnected_operators or disconnected_certified_operators or disconnected_community_operators or disconnected_marketplace_operators or disconnected_extra_catalogs) and not disconnected_operators_deploy_after_openshift %}
+{% if (disconnected_operators or disconnected_certified_operators or disconnected_community_operators or disconnected_marketplace_operators or disconnected_extra_catalogs or disconnected_prega_operators) and not disconnected_operators_deploy_after_openshift %}
 echo -e "${blue}************ RUNNING 04_disconnected_olm.sh ************${clear}"
 /root/scripts/04_disconnected_olm.sh
 {% if disconnected_url == None and disconnected_quay %}
@@ -42,6 +42,11 @@ rm -rf /root/manifests-redhat-operator-index-*
 /root/scripts/04_disconnected_olm.sh
 {% endif %}
 {% endif %}
+{% endif %}
+
+{% if disconnected_prega_operators %}
+echo -e "${blue}************ RUNNING 04_prega_migrate.sh ************${clear}"
+/root/scripts/04_prega_migrate.sh
 {% endif %}
 
 {% if nbde %}

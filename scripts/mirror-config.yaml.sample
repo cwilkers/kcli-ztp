@@ -38,6 +38,33 @@ mirror:
 {% endif %}
 {% endfor %}
 {% endif %}
+{% if disconnected_prega_operators %}
+{% if disconnected_prega_operators_version %}
+  - catalog: quay.io/prega/prega-operator-index:{{ disconnected_prega_operators_version }}
+{% else %}
+  - catalog: quay.io/prega/prega-operator-index:v${OCP_RELEASE}
+{% endif %}
+    packages:
+{% for package in disconnected_prega_operators %}
+{% if package.name is defined %}{# Comment: Support new syntax allowing to further filtering #}
+    - name: {{ package.name }}
+{% else %}{# Comment: Support old syntax #}
+    - name: {{ package }}
+{% endif %}
+{% if package.channels is defined and package.channels|length > 0 %}
+      channels:
+{% for channel in package.channels %}
+      - name: {{ channel.name }}
+{% if channel.minVersion is defined %}
+        minVersion: {{ channel.minVersion }}
+{% endif %}
+{% if channel.maxVersion is defined %}
+        maxVersion: {{ channel.maxVersion }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
 {% if disconnected_certified_operators %}
 {% if disconnected_certified_operators_version %}
   - catalog: registry.redhat.io/redhat/certified-operator-index:{{ disconnected_certified_operators_version }}
